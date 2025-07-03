@@ -49,7 +49,7 @@ Create a new Google Apps Script project
 
 Copy the code from backend.gs (to be created) into the script editor
 
-Deploy as a web app (instructions in the script comments)
+Deploy as a web app https://github.com/ayushshinde19/Passion-to-Profession-Finder/blob/main/Passion-to-Profession%20Finder%20Web%20App%20with%20Google%20Sheet%20Integration.pdf
 
 Replace the placeholder URL in frontend.html with your deployed web app URL
 
