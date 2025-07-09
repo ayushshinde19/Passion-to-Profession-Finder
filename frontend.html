@@ -148,40 +148,31 @@
         0% { border-color: #2563eb;}
         100% { border-color: #818cf8;}
     }
+    /* Enhanced general advice styling */
+    #generalAdviceText {
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+    .advice-highlight {
+        background-color: rgba(255, 255, 0, 0.3);
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+    }
+    .advice-list {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-top: 0.5rem;
+    }
+    .advice-list li {
+        margin-bottom: 0.5rem;
+    }
 </style>
-<script>
-     // Theme toggle logic
-     const html = document.documentElement;
-     const btn = document.getElementById('toggleThemeBtn');
-     const icon = document.getElementById('themeIcon');
-     const text = document.getElementById('themeText');
-     function setTheme(theme) {
-          if (theme === 'light') {
-                html.setAttribute('data-theme', 'light');
-                icon.innerHTML = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke="currentColor"/><path stroke="currentColor" d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95 7.07l-1.41-1.41M6.34 6.34L4.93 4.93m12.02 0l-1.41 1.41M6.34 17.66l-1.41 1.41"/></svg>`;
-                text.textContent = "Dark Mode";
-          } else {
-                html.removeAttribute('data-theme');
-                icon.innerHTML = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke="currentColor" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/></svg>`;
-                text.textContent = "Light Mode";
-          }
-          localStorage.setItem('theme', theme);
-     }
-     // Initial theme
-     const savedTheme = localStorage.getItem('theme');
-     if (savedTheme === 'light') setTheme('light');
-     else setTheme('dark');
-     btn.onclick = () => {
-          const isLight = html.getAttribute('data-theme') === 'light';
-          setTheme(isLight ? 'dark' : 'light');
-     };
-</script>
 </head>
 <body>
    <div class="container">
-       <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Passion to Profession Finder 🚀</h1>
+    <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Passion to Profession Finder 🚀</h1>
        <p class="text-center text-gray-600 mb-8">
-           Help your teen discover future career paths and projects based on their interests!
+           <b><i>Help your Kids discover future career paths and projects based on their interests!</i></b>
        </p>
 
        <!-- Help Button -->
@@ -203,11 +194,19 @@
            <input type="email" id="parentEmail"
                   class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
                   placeholder="e.g., jane.doe@example.com">
+           <p id="emailError" class="text-red-600 text-sm mt-1 hidden">Please enter a valid email address.</p>
+       </div>
+
+       <div class="mb-6">
+           <label for="parentPhone" class="block text-gray-700 text-lg font-medium mb-2">Your Phone Number:</label>
+           <input type="tel" id="parentPhone"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                  placeholder="e.g., +1 555 123 4567">
        </div>
 
        <div class="mb-6">
            <label for="interestsInput" class="block text-gray-700 text-lg font-medium mb-2">
-               Enter your teen's interests (e.g., art, coding, helping people, storytelling, gaming):
+               Enter your Kids interests (e.g., art, coding, helping people, storytelling, gaming):
            </label>
            <textarea id="interestsInput"
                      class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
@@ -231,83 +230,22 @@
            </div>
            <div id="generalAdvice" class="mt-8 p-6 bg-indigo-50 border border-indigo-200 rounded-lg">
                <h3 class="text-xl font-semibold text-indigo-800 mb-3">A Note from Your Career Guide 🌟</h3>
-               <p class="text-gray-700"></p>
+               <div id="generalAdviceText" class="text-gray-700">
+                   <!-- Advice content will be dynamically inserted here -->
+               </div>
            </div>
        </div>
    </div>
 
    <script type="module">
        // IMPORTANT: REPLACE THIS WITH YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL
-       // Instructions for deployment are provided after this code block.
-       const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx28Z31_AR6Yc7m4QK0mmiH1m9gZkiLBLt5vFUAE9h5T0APvNqNc20wQWtsTyNHKoiAtQ/exec'; // e.g., 'https://script.google.com/macros/s/AKfycbz_YOUR_SCRIPT_ID_HERE/exec'
+       const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyAsMvXWR3HRhy2TvXU0uBfXTfojhTid3U8dKsbvugMqPD94sz4LK8phFYc41c7wQXa/exec'; 
+       const LANDING_PAGE_URL = 'https://link.labdox.com/AI-SC-11'; // Your common landing page URL
 
-       // Dummy data simulating a Google Sheet for Gemini's reference.
-       // In a real application with a full backend, this might also be fetched.
-       const careerData = [
-           {
-               career: "UX Designer",
-               interests: ["art", "creativity", "helping people", "problem-solving", "technology", "design", "user experience"],
-               skills: ["User Research", "Wireframing", "Prototyping", "UI Design Tools (Figma/Sketch)", "Empathy", "Communication", "Information Architecture"],
-               projects: ["Design a mobile app for a local charity", "Redesign a problematic website (e.g., a school website)", "Create a user persona and journey map for a new product", "Conduct a usability test on a common app"]
-           },
-           {
-               career: "Ethical Hacker / Cybersecurity Analyst",
-               interests: ["coding", "problem-solving", "security", "puzzles", "technology", "investigation", "networks"],
-               skills: ["Network Security", "Penetration Testing", "Programming (Python/Bash)", "Vulnerability Assessment", "Cryptography", "Linux Basics", "Forensics"],
-               projects: ["Set up a secure home network and firewall rules", "Analyze a phishing email to identify its threats", "Learn basic command-line tools for security (e.g., nmap, wireshark)", "Practice 'capture the flag' (CTF) challenges online"]
-           },
-           {
-               career: "AI Trainer / Data Annotator",
-               interests: ["helping people", "storytelling", "language", "data", "technology", "attention to detail", "education"],
-               skills: ["Attention to Detail", "Data Labeling", "Understanding AI concepts", "Critical Thinking", "Pattern Recognition", "Classification", "Communication"],
-               projects: ["Annotate images for an object detection model (e.g., identifying objects in photos)", "Categorize text data for sentiment analysis (e.g., positive/negative reviews)", "Help train a chatbot by correcting its responses and improving its understanding", "Transcribe audio to text accurately"]
-           },
-           {
-               career: "Creative Technologist",
-               interests: ["art", "coding", "gaming", "creativity", "innovation", "technology", "interactive experiences", "experimentation"],
-               skills: ["Generative Art", "Interactive Installations", "Creative Coding (Processing/p5.js)", "Physical Computing (Arduino/Raspberry Pi)", "Prototyping", "3D Modeling", "Sound Design"],
-               projects: ["Build an interactive light display using a microcontroller", "Create a simple generative art piece with code", "Design a game prototype with unique interactive mechanics (not just traditional gameplay)", "Experiment with augmented reality (AR) filters or simple AR apps"]
-           },
-           {
-               career: "Game Developer",
-               interests: ["gaming", "coding", "storytelling", "art", "problem-solving", "creativity", "logic", "design"],
-               skills: ["Game Engines (Unity/Unreal)", "Programming (C#/C++/JavaScript)", "Game Design Principles", "Level Design", "Art/Animation Basics (optional but helpful)", "Debugging", "Physics Simulation"],
-               projects: ["Develop a simple platformer game from scratch", "Create a text-based adventure game with multiple endings", "Mod an existing game to add new features or levels", "Design and prototype a new game concept on paper or with simple tools"]
-           },
-           {
-               career: "Content Creator / Digital Storyteller",
-               interests: ["storytelling", "art", "communication", "social media", "video", "writing", "photography", "performance"],
-               skills: ["Video Editing", "Scriptwriting", "Storyboarding", "Audience Engagement", "SEO Basics", "Graphic Design (Canva/Adobe Express)", "Public Speaking (for video/podcasts)"],
-               projects: ["Start a YouTube channel or TikTok series about a hobby or interest", "Create a short documentary film or animated story", "Write a series of blog posts or a webcomic on a passion topic", "Produce a podcast mini-series on a specific subject"]
-           },
-           {
-               career: "Environmental Scientist / Engineer",
-               interests: ["science", "helping people", "nature", "problem-solving", "research", "sustainability"],
-               skills: ["Data Analysis", "Research Methods", "Environmental Policy", "Ecology", "Chemistry/Biology Basics", "Problem Solving"],
-               projects: ["Start a local recycling initiative", "Monitor air or water quality in your area", "Design a sustainable solution for a local environmental problem", "Research renewable energy sources and present your findings"]
-           },
-           {
-               career: "Robotics Engineer",
-               interests: ["coding", "science", "technology", "problem-solving", "building", "mechanics"],
-               skills: ["Robotics Fundamentals", "Programming (Python/C++)", "Electronics", "Mechanical Design", "Control Systems", "Troubleshooting"],
-               projects: ["Build a simple robot using a kit (e.g., Arduino-based)", "Program a robot to perform a task (e.g., follow a line)", "Design a concept for a robot to solve a real-world problem", "Learn about different types of sensors used in robotics"]
-           },
-            {
-               career: "Biotechnologist",
-               interests: ["science", "health", "research", "innovation", "problem-solving", "biology", "chemistry"],
-               skills: ["Molecular Biology", "Genetics", "Laboratory Techniques", "Data Analysis", "Biochemistry", "Problem-solving"],
-               projects: ["Grow bacteria cultures and observe their growth", "Extract DNA from fruit at home", "Research gene editing technologies like CRISPR", "Learn about the process of vaccine development"]
-           },
-           {
-               career: "Space Scientist / Astronomer",
-               interests: ["science", "space", "exploration", "research", "astronomy", "physics"],
-               skills: ["Physics", "Mathematics", "Observational Astronomy", "Data Analysis", "Research Skills", "Telescope Operation (basics)"],
-               projects: ["Identify constellations and planets using star charts or apps", "Build a simple telescope or binoculars stand", "Research a specific celestial body (planet, star, galaxy) and present findings", "Learn about the history of space exploration and current missions"]
-           }
-       ];
-
+       // DOM Elements
        const parentNameInput = document.getElementById('parentName');
        const parentEmailInput = document.getElementById('parentEmail');
+       const parentPhoneInput = document.getElementById('parentPhone');
        const interestsInput = document.getElementById('interestsInput');
        const findButton = document.getElementById('findButton');
        const helpButton = document.getElementById('helpButton');
@@ -317,60 +255,110 @@
        const successMessage = document.getElementById('successMessage');
        const resultsDiv = document.getElementById('results');
        const suggestedCareersContainer = document.getElementById('suggestedCareersContainer');
-       const generalAdviceParagraph = document.querySelector('#generalAdvice p');
+       const generalAdviceText = document.getElementById('generalAdviceText');
+       const emailError = document.getElementById('emailError');
 
-       // Add click handler for help button
+       // Event Listeners
        helpButton.addEventListener('click', () => {
-           window.location.href = 'https://academy.labdox.com/AI_summer_camp_july2025';
+           window.location.href = LANDING_PAGE_URL;
        });
 
+       // Validation Functions
+       function isValidEmail(email) {
+           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+           return emailRegex.test(email);
+       }
+
+       // Function to format Gemini's advice text
+       function formatAdviceText(text) {
+           if (!text) return '';
+           
+           // Convert markdown-like lists to HTML lists
+           text = text.replace(/\n\s*-\s*(.*?)(?=\n\s*-|\n\n|$)/g, '\n<li>$1</li>');
+           text = text.replace(/(<li>.*<\/li>)+/g, '<ul class="advice-list">$&</ul>');
+           
+           // Highlight key phrases
+           const highlightPhrases = ['important', 'recommend', 'suggest', 'key', 'focus', 'encourage'];
+           highlightPhrases.forEach(phrase => {
+               const regex = new RegExp(`\\b${phrase}\\b`, 'gi');
+               text = text.replace(regex, match => `<span class="advice-highlight">${match}</span>`);
+           });
+           
+           // Convert line breaks to paragraphs
+           text = text.split('\n\n').map(para => {
+               if (para.startsWith('<ul') || para.startsWith('<li>')) return para;
+               return `<p>${para}</p>`;
+           }).join('');
+           
+           return text;
+       }
+
+       // Main Function
        findButton.addEventListener('click', async () => {
+           // Get input values
            const parentName = parentNameInput.value.trim();
            const parentEmail = parentEmailInput.value.trim();
+           const parentPhone = parentPhoneInput.value.trim();
            const interests = interestsInput.value.trim();
 
-           errorMessage.classList.add('hidden'); // Hide any previous errors
-           successMessage.classList.add('hidden'); // Hide any previous success messages
-           resultsDiv.classList.add('hidden'); // Hide previous results
-           suggestedCareersContainer.innerHTML = ''; // Clear previous careers
-           generalAdviceParagraph.textContent = ''; // Clear previous advice
+           // Reset UI
+           errorMessage.classList.add('hidden');
+           successMessage.classList.add('hidden');
+           emailError.classList.add('hidden');
+           resultsDiv.classList.add('hidden');
+           suggestedCareersContainer.innerHTML = '';
+           generalAdviceText.innerHTML = '<p>Loading personalized advice...</p>';
 
+           // Validate inputs
            if (!parentName || !parentEmail || !interests) {
-               errorMessage.textContent = "Please fill in your name, email, and your teen's interests to get started!";
+               errorMessage.textContent = "Please fill in your name, email, and your Kids interests to get started!";
                errorMessage.classList.remove('hidden');
                return;
            }
 
+           if (!isValidEmail(parentEmail)) {
+               emailError.classList.remove('hidden');
+               return;
+           }
+
+           // Prepare UI for loading
            findButton.disabled = true;
            buttonText.textContent = "Finding...";
            loadingSpinner.classList.remove('hidden');
 
            try {
-               // --- Step 1: Call Gemini API ---
+               // Gemini API Call
                const geminiPrompt = `
-                   You are an expert career counselor specialized in guiding teens based on their interests.
-                   A parent has provided their teen's interests: "${interests}".
-
-                   Here is a dataset of various career fields, their associated interests, required skills, and suggested projects (simulating a Google Sheet):
-                   ${JSON.stringify(careerData, null, 2)}
-
+                   You are an expert career counselor specializing in guiding Kids based on their diverse interests.
+                   A parent has provided their Kids interests: "${interests}".
+                   
                    Your task is to:
-                   1. Identify relevant career fields from the provided dataset or suggest new ones that align strongly with the given interests.
-                   2. For each suggested career, explain why it's a good match, list the key skills needed, and suggest specific projects a teen can start now. Prioritize projects from the provided dataset if they fit well, otherwise, generate new, practical, and age-appropriate project ideas.
-                   3. Provide a brief, encouraging general advice message for the parents about helping their teen explore these paths.
-
-                   Ensure your response is structured as a JSON object matching the following schema:
+                   1. Identify 3-5 relevant career fields that strongly align with the provided interests.
+                   2. For each career:
+                      - Provide a compelling name
+                      - Write a 2-3 sentence description explaining why it's a good match
+                      - List matching interests
+                      - List key skills needed
+                      - Suggest 3-5 practical projects the teen can start now
+                   3. Provide personalized advice for parents in the "generalAdvice" field (3-4 paragraphs)
+                      - Include specific strategies based on the Kids interests
+                      - Mention resources or approaches to explore
+                      - Highlight important developmental considerations
+                      - Provide encouragement and realistic expectations
+                      - Format with clear paragraphs and bullet points when appropriate
+                   
+                   Structure your response as JSON exactly matching this schema:
                    {
                      "suggestedCareers": [
                        {
-                         "name": "string",
-                         "description": "string",
-                         "matchingInterests": ["string"],
-                         "skillsNeeded": ["string"],
-                         "suggestedProjects": ["string"]
+                         "name": "Career Name",
+                         "description": "Why this matches...",
+                         "matchingInterests": ["interest1", "interest2"],
+                         "skillsNeeded": ["skill1", "skill2"],
+                         "suggestedProjects": ["project1", "project2"]
                        }
                      ],
-                     "generalAdvice": "string"
+                     "generalAdvice": "Personalized advice for parents..."
                    }
                `;
 
@@ -400,10 +388,10 @@
                    }
                };
 
-               // The Gemini API key will be injected here by the deployment environment.
-               const geminiApiKey = "AIzaSyAZOOFOWDvk-HUchplXE_3vg649LwVjMU8"; // Canvas will automatically provide the API key here
+               const geminiApiKey = "AIzaSyAZOOFOWDvk-HUchplXE_3vg649LwVjMU8";
                const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
 
+               // Call Gemini API
                const geminiResponse = await fetch(geminiApiUrl, {
                    method: 'POST',
                    headers: { 'Content-Type': 'application/json' },
@@ -413,83 +401,104 @@
                const geminiResult = await geminiResponse.json();
                console.log("Gemini API Response:", geminiResult);
 
+               // Process Gemini Response
                let parsedGeminiData;
-               if (geminiResult.candidates && geminiResult.candidates.length > 0 &&
-                   geminiResult.candidates[0].content && geminiResult.candidates[0].content.parts &&
-                   geminiResult.candidates[0].content.parts.length > 0) {
-                   const rawJson = geminiResult.candidates[0].content.parts[0].text;
-                   parsedGeminiData = JSON.parse(rawJson);
+               if (geminiResult.candidates?.[0]?.content?.parts?.[0]?.text) {
+                   parsedGeminiData = JSON.parse(geminiResult.candidates[0].content.parts[0].text);
 
-                   if (parsedGeminiData.suggestedCareers && parsedGeminiData.suggestedCareers.length > 0) {
+                   // Display Career Suggestions
+                   if (parsedGeminiData.suggestedCareers?.length > 0) {
                        parsedGeminiData.suggestedCareers.forEach(career => {
                            const careerCard = `
                                <div class="bg-gray-50 p-6 rounded-xl shadow-sm mb-6 border border-gray-200">
                                    <h3 class="text-2xl font-semibold text-indigo-700 mb-3">${career.name}</h3>
-                                   <p class="text-gray-700 mb-4">${career.description}</p>
+                                   <p class="text-gray-700 mb-4">${career.description || ''}</p>
                                    <div class="mb-4">
                                        <h4 class="text-lg font-medium text-gray-800 mb-2">Matching Interests:</h4>
                                        <div class="flex flex-wrap gap-2">
-                                           ${(career.matchingInterests ?? []).map(interest => `<span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">${interest}</span>`).join('')}
+                                           ${(career.matchingInterests || []).map(interest => 
+                                               `<span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">${interest}</span>`
+                                           ).join('')}
                                        </div>
                                    </div>
                                    <div class="mb-4">
                                        <h4 class="text-lg font-medium text-gray-800 mb-2">Skills Needed:</h4>
                                        <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-                                           ${(career.skillsNeeded ?? []).map(skill => `<li>${skill}</li>`).join('')}
+                                           ${(career.skillsNeeded || []).map(skill => `<li>${skill}</li>`).join('')}
                                        </ul>
                                    </div>
                                    <div>
                                        <h4 class="text-lg font-medium text-gray-800 mb-2">Projects to Start Now:</h4>
                                        <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-                                           ${(career.suggestedProjects ?? []).map(project => `<li>${project}</li>`).join('')}
+                                           ${(career.suggestedProjects || []).map(project => `<li>${project}</li>`).join('')}
                                        </ul>
+                                   </div>
+                                   <div class="mt-6 text-center">
+                                       <a href="${LANDING_PAGE_URL}" target="_blank" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 shadow-md">
+                                           Click here for more resources
+                                       </a>
                                    </div>
                                </div>
                            `;
                            suggestedCareersContainer.innerHTML += careerCard;
                        });
+
+                       // Display General Advice from Gemini
+                       if (parsedGeminiData.generalAdvice) {
+                           generalAdviceText.innerHTML = formatAdviceText(parsedGeminiData.generalAdvice);
+                       } else {
+                           generalAdviceText.innerHTML = `
+                               <p>Based on your Kids interests, here are some general recommendations:</p>
+                               <ul class="advice-list">
+                                   <li>Encourage exploration through hands-on projects in different areas</li>
+                                   <li>Focus on developing transferable skills like communication and problem-solving</li>
+                                   <li>Connect with professionals in fields of interest for informational interviews</li>
+                                   <li>Remember that career paths often change - the goal is discovery, not final decisions</li>
+                               </ul>
+                           `;
+                       }
+
                        resultsDiv.classList.remove('hidden');
-                       generalAdviceParagraph.textContent = parsedGeminiData.generalAdvice;
+                       successMessage.textContent = "Career suggestions found! Check below.";
+                       successMessage.classList.remove('hidden');
                    } else {
-                       errorMessage.textContent = "No specific career suggestions found based on the interests. Try rephrasing or adding more details.";
-                       errorMessage.classList.remove('hidden');
-                       return; // Stop here if no Gemini results
+                       throw new Error("No career suggestions found");
                    }
-
                } else {
-                   errorMessage.textContent = "Could not get a valid response from the AI. Please try again.";
-                   errorMessage.classList.remove('hidden');
-                   return; // Stop here if Gemini failed
+                   throw new Error("Invalid response from Gemini");
                }
 
-               // --- Step 2: Send data to Google Apps Script ---
-               if (GOOGLE_APPS_SCRIPT_WEB_APP_URL === 'https://script.google.com/macros/s/AKfycbz4qb35Ae5Fw_s_0VP-EYEHFBsFeH7T5YHBQHu9N-VSt04t2Pc4C0VvUIS5usK2lgBfiQ/exec') {
-                   errorMessage.textContent = "Please set up your Google Apps Script and update the 'https://script.google.com/macros/s/AKfycbz4qb35Ae5Fw_s_0VP-EYEHFBsFeH7T5YHBQHu9N-VSt04t2Pc4C0VvUIS5usK2lgBfiQ/exec' in the code.";
-                   errorMessage.classList.remove('hidden');
-                   return;
+               // Save to Google Sheets (if URL is configured)
+               if (GOOGLE_APPS_SCRIPT_WEB_APP_URL && !GOOGLE_APPS_SCRIPT_WEB_APP_URL.includes('example.com')) {
+                   const dataToSave = {
+                       parentName,
+                       parentEmail,
+                       parentPhone,
+                       teenInterestsInput: interests,
+                       geminiResponse: parsedGeminiData
+                   };
+
+                   await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+                       method: 'POST',
+                       mode: 'no-cors',
+                       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                       body: JSON.stringify(dataToSave)
+                   });
                }
-
-               const dataToSave = {
-                   parentName: parentName,
-                   parentEmail: parentEmail,
-                   teenInterestsInput: interests,
-                   geminiResponse: parsedGeminiData // Send the whole parsed object
-               };
-
-               const appsScriptResponse = await fetch("https://script.google.com/macros/s/AKfycbz4qb35Ae5Fw_s_0VP-EYEHFBsFeH7T5YHBQHu9N-VSt04t2Pc4C0VvUIS5usK2lgBfiQ/exec", {
-                   method: 'POST',
-                   mode: 'no-cors', // Important for Apps Script Web App (pre-flight issues)
-                   headers: {
-                       'Content-Type': 'text/plain;charset=utf-8', // Send as plain text for Apps Script do_Post
-                   },
-                   body: JSON.stringify(dataToSave)
-               });
-
 
            } catch (error) {
-               console.error("Error during process:", error);
-               errorMessage.textContent = `An error occurred: ${error.message}. Please check your internet connection and Apps Script URL.`;
+               console.error("Error:", error);
+               errorMessage.textContent = "An error occurred while generating suggestions. Please try again.";
                errorMessage.classList.remove('hidden');
+               generalAdviceText.innerHTML = `
+                   <p>We couldn't generate personalized advice this time. Here are some general tips:</p>
+                   <ul class="advice-list">
+                       <li>Try refining your kid's interests - be more specific or combine multiple interests</li>
+                       <li>Check your internet connection and try again</li>
+                       <li>Focus on what excites your teen rather than just "good careers"</li>
+                       <li>Remember that career exploration is a process, not a one-time decision</li>
+                   </ul>
+               `;
            } finally {
                findButton.disabled = false;
                buttonText.textContent = "Find Professions";
